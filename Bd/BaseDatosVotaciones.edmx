@@ -1,0 +1,467 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BaseDatosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Candidatos">
+          <Key>
+            <PropertyRef Name="candidato_id" />
+          </Key>
+          <Property Name="candidato_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="candidato_fec_inscripcion" Type="datetime" Nullable="false" />
+          <Property Name="usuario_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cursos">
+          <Key>
+            <PropertyRef Name="curso_id" />
+          </Key>
+          <Property Name="curso_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="curso_nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="curso_valido_votacion" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Propuestas">
+          <Key>
+            <PropertyRef Name="propuesta_id" />
+          </Key>
+          <Property Name="propuesta_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="propuesta_nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="propuesta_descripcion" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="candidato_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="rol_id" />
+          </Key>
+          <Property Name="rol_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="rol_descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="usuario_id" />
+          </Key>
+          <Property Name="usuario_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="usuario_nombres" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="usuario_apellidos" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="usuario_documento" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="usuario_fec_nac" Type="date" Nullable="false" />
+          <Property Name="usuario_email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="usuario_password" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="usuario_activo" Type="bit" Nullable="false" />
+          <Property Name="rol_id" Type="int" Nullable="false" />
+          <Property Name="curso_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Votos">
+          <Key>
+            <PropertyRef Name="voto_id" />
+          </Key>
+          <Property Name="voto_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="candidato_id" Type="int" Nullable="false" />
+          <Property Name="usuario_id" Type="int" Nullable="false" />
+          <Property Name="fecha_votacion" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="Candidatos_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Candidatos" Type="Self.Candidatos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="usuario_id" />
+            </Principal>
+            <Dependent Role="Candidatos">
+              <PropertyRef Name="usuario_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Propuestas_Candidatos">
+          <End Role="Candidatos" Type="Self.Candidatos" Multiplicity="1" />
+          <End Role="Propuestas" Type="Self.Propuestas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidatos">
+              <PropertyRef Name="candidato_id" />
+            </Principal>
+            <Dependent Role="Propuestas">
+              <PropertyRef Name="candidato_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Usuarios_Cursos">
+          <End Role="Cursos" Type="Self.Cursos" Multiplicity="1" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cursos">
+              <PropertyRef Name="curso_id" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="curso_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Usuarios_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="rol_id" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="rol_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Votos_Candidatos">
+          <End Role="Candidatos" Type="Self.Candidatos" Multiplicity="1" />
+          <End Role="Votos" Type="Self.Votos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidatos">
+              <PropertyRef Name="candidato_id" />
+            </Principal>
+            <Dependent Role="Votos">
+              <PropertyRef Name="candidato_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Votos_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="Votos" Type="Self.Votos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="usuario_id" />
+            </Principal>
+            <Dependent Role="Votos">
+              <PropertyRef Name="usuario_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_login" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Usuario" Type="nvarchar" Mode="In" />
+          <Parameter Name="Password" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="BaseDatosModelStoreContainer">
+          <EntitySet Name="Candidatos" EntityType="Self.Candidatos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cursos" EntityType="Self.Cursos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Propuestas" EntityType="Self.Propuestas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Votos" EntityType="Self.Votos" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="Candidatos_Usuarios" Association="Self.Candidatos_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Candidatos" EntitySet="Candidatos" />
+          </AssociationSet>
+          <AssociationSet Name="Propuestas_Candidatos" Association="Self.Propuestas_Candidatos">
+            <End Role="Candidatos" EntitySet="Candidatos" />
+            <End Role="Propuestas" EntitySet="Propuestas" />
+          </AssociationSet>
+          <AssociationSet Name="Usuarios_Cursos" Association="Self.Usuarios_Cursos">
+            <End Role="Cursos" EntitySet="Cursos" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+          <AssociationSet Name="Usuarios_Roles" Association="Self.Usuarios_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+          <AssociationSet Name="Votos_Candidatos" Association="Self.Votos_Candidatos">
+            <End Role="Candidatos" EntitySet="Candidatos" />
+            <End Role="Votos" EntitySet="Votos" />
+          </AssociationSet>
+          <AssociationSet Name="Votos_Usuarios" Association="Self.Votos_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Votos" EntitySet="Votos" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BaseDatosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BaseDatosEntities" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="Candidatos" EntityType="BaseDatosModel.Candidatos" />
+          <EntitySet Name="Cursos" EntityType="BaseDatosModel.Cursos" />
+          <EntitySet Name="Propuestas" EntityType="BaseDatosModel.Propuestas" />
+          <EntitySet Name="Roles" EntityType="BaseDatosModel.Roles" />
+          <EntitySet Name="Usuarios" EntityType="BaseDatosModel.Usuarios" />
+          <EntitySet Name="Votos" EntityType="BaseDatosModel.Votos" />
+          <AssociationSet Name="Candidatos_Usuarios" Association="BaseDatosModel.Candidatos_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Candidatos" EntitySet="Candidatos" />
+          </AssociationSet>
+          <AssociationSet Name="Propuestas_Candidatos" Association="BaseDatosModel.Propuestas_Candidatos">
+            <End Role="Candidatos" EntitySet="Candidatos" />
+            <End Role="Propuestas" EntitySet="Propuestas" />
+          </AssociationSet>
+          <AssociationSet Name="Votos_Candidatos" Association="BaseDatosModel.Votos_Candidatos">
+            <End Role="Candidatos" EntitySet="Candidatos" />
+            <End Role="Votos" EntitySet="Votos" />
+          </AssociationSet>
+          <AssociationSet Name="Usuarios_Cursos" Association="BaseDatosModel.Usuarios_Cursos">
+            <End Role="Cursos" EntitySet="Cursos" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+          <AssociationSet Name="Usuarios_Roles" Association="BaseDatosModel.Usuarios_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+          <AssociationSet Name="Votos_Usuarios" Association="BaseDatosModel.Votos_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Votos" EntitySet="Votos" />
+          </AssociationSet>
+          <FunctionImport Name="sp_login" ReturnType="Collection(BaseDatosModel.sp_login_Result)">
+            <Parameter Name="Usuario" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Candidatos">
+          <Key>
+            <PropertyRef Name="candidato_id" />
+          </Key>
+          <Property Name="candidato_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="candidato_fec_inscripcion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="usuario_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Usuarios" Relationship="BaseDatosModel.Candidatos_Usuarios" FromRole="Candidatos" ToRole="Usuarios" />
+          <NavigationProperty Name="Propuestas" Relationship="BaseDatosModel.Propuestas_Candidatos" FromRole="Candidatos" ToRole="Propuestas" />
+          <NavigationProperty Name="Votos" Relationship="BaseDatosModel.Votos_Candidatos" FromRole="Candidatos" ToRole="Votos" />
+        </EntityType>
+        <EntityType Name="Cursos">
+          <Key>
+            <PropertyRef Name="curso_id" />
+          </Key>
+          <Property Name="curso_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="curso_nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="curso_valido_votacion" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Usuarios" Relationship="BaseDatosModel.Usuarios_Cursos" FromRole="Cursos" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Propuestas">
+          <Key>
+            <PropertyRef Name="propuesta_id" />
+          </Key>
+          <Property Name="propuesta_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="propuesta_nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="propuesta_descripcion" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="candidato_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Candidatos" Relationship="BaseDatosModel.Propuestas_Candidatos" FromRole="Propuestas" ToRole="Candidatos" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="rol_id" />
+          </Key>
+          <Property Name="rol_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="rol_descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Usuarios" Relationship="BaseDatosModel.Usuarios_Roles" FromRole="Roles" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="usuario_id" />
+          </Key>
+          <Property Name="usuario_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="usuario_nombres" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="usuario_apellidos" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="usuario_documento" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="usuario_fec_nac" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="usuario_email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="usuario_password" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="usuario_activo" Type="Boolean" Nullable="false" />
+          <Property Name="rol_id" Type="Int32" Nullable="false" />
+          <Property Name="curso_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Candidatos" Relationship="BaseDatosModel.Candidatos_Usuarios" FromRole="Usuarios" ToRole="Candidatos" />
+          <NavigationProperty Name="Cursos" Relationship="BaseDatosModel.Usuarios_Cursos" FromRole="Usuarios" ToRole="Cursos" />
+          <NavigationProperty Name="Roles" Relationship="BaseDatosModel.Usuarios_Roles" FromRole="Usuarios" ToRole="Roles" />
+          <NavigationProperty Name="Votos" Relationship="BaseDatosModel.Votos_Usuarios" FromRole="Usuarios" ToRole="Votos" />
+        </EntityType>
+        <EntityType Name="Votos">
+          <Key>
+            <PropertyRef Name="voto_id" />
+          </Key>
+          <Property Name="voto_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="candidato_id" Type="Int32" Nullable="false" />
+          <Property Name="usuario_id" Type="Int32" Nullable="false" />
+          <Property Name="fecha_votacion" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Candidatos" Relationship="BaseDatosModel.Votos_Candidatos" FromRole="Votos" ToRole="Candidatos" />
+          <NavigationProperty Name="Usuarios" Relationship="BaseDatosModel.Votos_Usuarios" FromRole="Votos" ToRole="Usuarios" />
+        </EntityType>
+        <Association Name="Candidatos_Usuarios">
+          <End Type="BaseDatosModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+          <End Type="BaseDatosModel.Candidatos" Role="Candidatos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="usuario_id" />
+            </Principal>
+            <Dependent Role="Candidatos">
+              <PropertyRef Name="usuario_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Propuestas_Candidatos">
+          <End Type="BaseDatosModel.Candidatos" Role="Candidatos" Multiplicity="1" />
+          <End Type="BaseDatosModel.Propuestas" Role="Propuestas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidatos">
+              <PropertyRef Name="candidato_id" />
+            </Principal>
+            <Dependent Role="Propuestas">
+              <PropertyRef Name="candidato_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Votos_Candidatos">
+          <End Type="BaseDatosModel.Candidatos" Role="Candidatos" Multiplicity="1" />
+          <End Type="BaseDatosModel.Votos" Role="Votos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidatos">
+              <PropertyRef Name="candidato_id" />
+            </Principal>
+            <Dependent Role="Votos">
+              <PropertyRef Name="candidato_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Usuarios_Cursos">
+          <End Type="BaseDatosModel.Cursos" Role="Cursos" Multiplicity="1" />
+          <End Type="BaseDatosModel.Usuarios" Role="Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cursos">
+              <PropertyRef Name="curso_id" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="curso_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Usuarios_Roles">
+          <End Type="BaseDatosModel.Roles" Role="Roles" Multiplicity="1" />
+          <End Type="BaseDatosModel.Usuarios" Role="Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="rol_id" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="rol_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Votos_Usuarios">
+          <End Type="BaseDatosModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+          <End Type="BaseDatosModel.Votos" Role="Votos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="usuario_id" />
+            </Principal>
+            <Dependent Role="Votos">
+              <PropertyRef Name="usuario_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="sp_login_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Nombres" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Apellidos" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Documento" Nullable="false" MaxLength="20" />
+          <Property Type="DateTime" Name="FechaNacimiento" Nullable="false" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="100" />
+          <Property Type="Boolean" Name="Activo" Nullable="false" />
+          <Property Type="String" Name="Rol" Nullable="false" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BaseDatosModelStoreContainer" CdmEntityContainer="BaseDatosEntities" >
+          <EntitySetMapping Name="Candidatos">
+            <EntityTypeMapping TypeName="BaseDatosModel.Candidatos">
+              <MappingFragment StoreEntitySet="Candidatos">
+                <ScalarProperty Name="usuario_id" ColumnName="usuario_id" />
+                <ScalarProperty Name="candidato_fec_inscripcion" ColumnName="candidato_fec_inscripcion" />
+                <ScalarProperty Name="candidato_id" ColumnName="candidato_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cursos">
+            <EntityTypeMapping TypeName="BaseDatosModel.Cursos">
+              <MappingFragment StoreEntitySet="Cursos">
+                <ScalarProperty Name="curso_valido_votacion" ColumnName="curso_valido_votacion" />
+                <ScalarProperty Name="curso_nombre" ColumnName="curso_nombre" />
+                <ScalarProperty Name="curso_id" ColumnName="curso_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Propuestas">
+            <EntityTypeMapping TypeName="BaseDatosModel.Propuestas">
+              <MappingFragment StoreEntitySet="Propuestas">
+                <ScalarProperty Name="candidato_id" ColumnName="candidato_id" />
+                <ScalarProperty Name="propuesta_descripcion" ColumnName="propuesta_descripcion" />
+                <ScalarProperty Name="propuesta_nombre" ColumnName="propuesta_nombre" />
+                <ScalarProperty Name="propuesta_id" ColumnName="propuesta_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="BaseDatosModel.Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="rol_descripcion" ColumnName="rol_descripcion" />
+                <ScalarProperty Name="rol_id" ColumnName="rol_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="BaseDatosModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="curso_id" ColumnName="curso_id" />
+                <ScalarProperty Name="rol_id" ColumnName="rol_id" />
+                <ScalarProperty Name="usuario_activo" ColumnName="usuario_activo" />
+                <ScalarProperty Name="usuario_password" ColumnName="usuario_password" />
+                <ScalarProperty Name="usuario_email" ColumnName="usuario_email" />
+                <ScalarProperty Name="usuario_fec_nac" ColumnName="usuario_fec_nac" />
+                <ScalarProperty Name="usuario_documento" ColumnName="usuario_documento" />
+                <ScalarProperty Name="usuario_apellidos" ColumnName="usuario_apellidos" />
+                <ScalarProperty Name="usuario_nombres" ColumnName="usuario_nombres" />
+                <ScalarProperty Name="usuario_id" ColumnName="usuario_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Votos">
+            <EntityTypeMapping TypeName="BaseDatosModel.Votos">
+              <MappingFragment StoreEntitySet="Votos">
+                <ScalarProperty Name="fecha_votacion" ColumnName="fecha_votacion" />
+                <ScalarProperty Name="usuario_id" ColumnName="usuario_id" />
+                <ScalarProperty Name="candidato_id" ColumnName="candidato_id" />
+                <ScalarProperty Name="voto_id" ColumnName="voto_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_login" FunctionName="BaseDatosModel.Store.sp_login">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BaseDatosModel.sp_login_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="Documento" ColumnName="Documento" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Rol" ColumnName="Rol" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
