@@ -170,5 +170,32 @@ namespace Logica
                 return false;
             }
         }
+
+        public void DeleteUser(int idUsuario)
+        {
+            var query = @"delete from Votos where usuario_id = " + idUsuario;
+            _conexion.Database.SqlQuery<object>(query).FirstOrDefault();
+            query = @"delete from Propuestas where candidato_id = (select top 1 candidato_id from Candidatos where usuario_id = " + idUsuario + ")";
+            _conexion.Database.SqlQuery<object>(query).FirstOrDefault();
+            query = @"delete from Candidatos where usuario_id = " + idUsuario;
+            _conexion.Database.SqlQuery<object>(query).FirstOrDefault();
+            query = @"delete from Usuarios where usuario_id = " + idUsuario;
+            _conexion.Database.SqlQuery<object>(query).FirstOrDefault();
+        }
+
+        public void EditUser(int idUsuario, string name, string lastName, string doc, string course, string email)
+        {
+            try
+            {
+                var query = @"Update Usuarios set usuario_nombres = '" + name + "', usuario_apellidos = '" + lastName
+                            + "', usuario_documento = '" + doc + "', curso_id = (select top 1 curso_id from Cursos where curso_nombre ='" +
+                            course + "'), usuario_email = '" + email + "' where usuario_id = " + idUsuario;
+                _conexion.Database.SqlQuery<object>(query).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                //
+            }
+        }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Logica;
 
@@ -107,6 +110,18 @@ namespace SistemaVotaciones
             if (!valid)
             {
                 MessageBox.Show(@"Llene todos los campos.");
+                return;
+            }
+            var regex = new Regex(@"/[a-zA-Z]+/");
+            if (!regex.Match(c_name.Text).Success || !regex.Match(c_last.Text).Success || !regex.Match(c_email.Text).Success)
+            {
+                MessageBox.Show(@"Error en el formato de los campos de texto.");
+                return;
+            }
+            regex = new Regex(@"^\d$");
+            if (!regex.Match(c_doc.Text).Success)
+            {
+                MessageBox.Show(@"Error en el formato del documento.");
                 return;
             }
             var crear = _sesion.CrearUsuario(c_name.Text, c_last.Text, c_doc.Text, c_date.Value.ToString("yyyy-MM-dd"), c_email.Text, c_pass.Text,
@@ -273,6 +288,80 @@ namespace SistemaVotaciones
             agregarPropuesta_panel.Hide();
             buscar_candidato_panel.Hide();
             resultados_panel.Hide();
+        }
+
+        private void editarUsuario_Click(object sender, EventArgs e)
+        {
+            SetHiddens();
+            UsersGeneral.Show();
+            var usr = _sesion.ListaEstudiantes();
+            foreach (var est in usr)
+            {
+                allEst.Rows.Add(est.Id, est.Nombres, est.Apellidos, est.Curso, est.Documento, est.Email);
+            }
+        }
+
+        private void elmSaveGen_Click(object sender, EventArgs e)
+        {
+            var rows = allEst.Rows;
+            for (var i = 0; i < rows.Count; i++)
+            {
+                try
+                {
+                    var slt = rows[i].Cells[0].Value;
+                    var name = rows[i].Cells[1].Value.ToString();
+                    var lname = rows[i].Cells[2].Value.ToString();
+                    var doc = rows[i].Cells[4].Value.ToString();
+                    var course = rows[i].Cells[3].Value.ToString();
+                    var email = rows[i].Cells[5].Value.ToString();
+                    if (!string.IsNullOrEmpty(slt.ToString()) &&
+                        !string.IsNullOrEmpty(name) &&
+                        !string.IsNullOrEmpty(lname) &&
+                        !string.IsNullOrEmpty(doc) &&
+                        !string.IsNullOrEmpty(course) &&
+                        !string.IsNullOrEmpty(email))
+                        Task.Factory.StartNew(() => _sesion.EditUser((int)slt, name, lname, doc, course, email));
+                    else MessageBox.Show(@"Todos los datos deben estar llenos.");
+                }
+                catch (Exception exception)
+                {
+                    //
+                }
+            }
+        }
+
+        private void elmUserGen_Click(object sender, EventArgs e)
+        {
+            var rows = allEst.SelectedRows;
+            for (var i = 0; i < rows.Count; i++)
+            {
+                try
+                {
+                    var slt = rows[i].Cells[0].Value;
+                    Task.Factory.StartNew(() => _sesion.DeleteUser((int)slt));
+                }
+                catch (Exception exception)
+                {
+                    //
+                }
+            }
+        }
+
+        private void logo_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void sessionOut_Click(object sender, EventArgs e)
+        {
+            SetHiddens();
+            menu.Hide();
+            login.Show();
         }
     }
 }
